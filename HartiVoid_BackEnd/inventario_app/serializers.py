@@ -21,10 +21,11 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = '__all__'
-        read_only_fields = ('id',)
+        
 
     def create(self, validated_data):
-        return Producto.objects.create(**validated_data)
+        Producto(**validated_data).save()
+        return Producto.objects.get(**validated_data)
 
     def update(self, instance, validated_data):
         instance.nombre = validated_data.get('nombre', instance.nombre)
