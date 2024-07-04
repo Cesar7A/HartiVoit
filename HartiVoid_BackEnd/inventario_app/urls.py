@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ProductoViewSet, LineaViewSet, ProveedorViewSet, ProductoListCreateView, ProductoDetailView
+from .views import ProductoViewSet, LineaViewSet, ProveedorViewSet, UserPermissionsView
 
 router = DefaultRouter()
 router.register(r'productos', ProductoViewSet)
@@ -9,6 +9,5 @@ router.register(r'proveedores', ProveedorViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('productos/', ProductoListCreateView.as_view(), name='producto-list-create'),
-    path('productos/<int:pk>/', ProductoDetailView.as_view(), name='producto-detail'),
+    path('permisos/', UserPermissionsView.as_view(), name='user-permissions'),
 ]

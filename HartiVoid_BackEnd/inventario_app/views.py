@@ -1,24 +1,34 @@
 from django.shortcuts import render
-from rest_framework import viewsets, generics
+from rest_framework import viewsets
 from .models import Producto, Linea, Proveedor
 from .serializers import ProductoSerializer, LineaSerializer, ProveedorSerializer
+from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 class LineaViewSet(viewsets.ModelViewSet):
     queryset = Linea.objects.all().order_by('nombre')
     serializer_class = LineaSerializer
+    permission_classes = [DjangoModelPermissions]
 
 class ProveedorViewSet(viewsets.ModelViewSet):
     queryset = Proveedor.objects.all().order_by('nombre')
     serializer_class = ProveedorSerializer
+    permission_classes = [DjangoModelPermissions]
 
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all().order_by('custom_id')
     serializer_class = ProductoSerializer
+    permission_classes = [DjangoModelPermissions]
 
-class ProductoListCreateView(generics.ListCreateAPIView):
-    queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
+class UserPermissionsView(APIView):
+    permission_classes = [IsAuthenticated]
 
-class ProductoDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
+    def get(self, request):
+        user = request.user
+        permissions = {
+            "can_edit": user.has_perm('inventario_app_producto.change_model'),
+            "can_delete": user.has_perm('inventario_app_producto.delete_model'),
+            "can_create": user.has_perm('inventario_app_producto.add_model'),
+        }
+        return Response(permissions)
