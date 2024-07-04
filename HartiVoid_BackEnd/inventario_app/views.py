@@ -27,8 +27,8 @@ class UserPermissionsView(APIView):
     def get(self, request):
         user = request.user
         permissions = {
-            "can_edit": user.has_perm('inventario_app_producto.change_model'),
-            "can_delete": user.has_perm('inventario_app_producto.delete_model'),
-            "can_create": user.has_perm('inventario_app_producto.add_model'),
+            "can_edit": user.has_perm('inventario_app.change_producto'),
+            "can_delete": user.has_perm('inventario_app.delete_producto'),
+            "can_create": user.has_perm('inventario_app.add_producto'),
         }
         return Response(permissions)
